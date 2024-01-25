@@ -21,14 +21,27 @@ ATank::ATank()
 void ATank::BeginPlay()
 {
 	Super::BeginPlay();
+	PlayerControllerRef = Cast<APlayerController>(GetController());
 
-	if (const APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	if (PlayerControllerRef)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
-			UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+			UEnhancedInputLocalPlayerSubsystem>(PlayerControllerRef->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(PlayerMappingContext, 0);
 		}
+	}
+}
+
+void ATank::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (PlayerControllerRef)
+	{
+		FHitResult HitResult;
+		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+		RotateTurret(HitResult.ImpactPoint);
 	}
 }
 
@@ -36,7 +49,7 @@ void ATank::Move(const FInputActionValue& Value)
 {
 	const float Direction = Value.Get<float>();
 	const float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
-	
+
 	FVector DeltaLocation = FVector::ZeroVector;
 	DeltaLocation.X = Direction * DeltaTime * Speed;
 
@@ -51,7 +64,7 @@ void ATank::Turn(const FInputActionValue& Value)
 
 	FRotator DeltaRotation = FRotator::ZeroRotator;
 	DeltaRotation.Yaw = Direction * DeltaTime * TurnSpeed;
-	
+
 	AddActorLocalRotation(DeltaRotation, true);
 }
 
@@ -60,16 +73,20 @@ void ATank::Fire(const FInputActionValue& Value)
 	UE_LOG(LogTemp, Display, TEXT("Firing"));
 }
 
-void ATank::RotateCamera(const FInputActionValue& Value)
-{
-	const float Direction = Value.Get<float>();
-	const float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
-
-	FRotator DeltaRotation = FRotator::ZeroRotator;
-	DeltaRotation.Yaw = Direction * DeltaTime * TurnSpeed;
-	SpringArm->AddWorldRotation(DeltaRotation);
-	TurretMesh->AddWorldRotation(DeltaRotation);
-}
+// Alternative implementation for rotating the turret (and the camera). Not reusable for non player turrets so not using it.
+// void ATank::RotateCamera(const FInputActionValue& Value)
+// {
+// 	const float Direction = Value.Get<float>();
+// 	const float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+//
+// 	FRotator DeltaRotation = FRotator::ZeroRotator;
+// 	DeltaRotation.Yaw = Direction * DeltaTime * TurnSpeed;
+//
+// 	// DrawLineTraces(this, ECC_Visibility, )
+// 	// PlayerControllerRef->GetHitResultUnderCursor()
+// 	SpringArm->AddWorldRotation(DeltaRotation);
+// 	// TurretMesh->AddWorldRotation(DeltaRotation);
+// }
 
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -79,7 +96,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATank::Move);
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATank::Turn);
-		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &ATank::RotateCamera);
+		// EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &ATank::RotateCamera);
 		// EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATank::Fire);
 	}
 }

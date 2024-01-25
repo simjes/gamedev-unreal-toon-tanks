@@ -23,6 +23,8 @@ public:
 	// Sets default values for this pawn's properties
 	ATank();
 	virtual void BeginPlay() override;
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
@@ -57,6 +59,8 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Pawn Components")
 	float TurnSpeed = 100;
 
+	APlayerController* PlayerControllerRef;
+	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 };
