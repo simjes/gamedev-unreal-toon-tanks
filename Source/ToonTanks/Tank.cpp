@@ -39,8 +39,9 @@ void ATank::Move(const FInputActionValue& Value)
 	
 	FVector DeltaLocation = FVector::ZeroVector;
 	DeltaLocation.X = Direction * DeltaTime * Speed;
-	
-	AddActorLocalOffset(DeltaLocation);
+
+	// Enable sweep so we don't merge with walls
+	AddActorLocalOffset(DeltaLocation, true);
 }
 
 void ATank::Turn(const FInputActionValue& Value)
@@ -50,7 +51,8 @@ void ATank::Turn(const FInputActionValue& Value)
 
 	FRotator DeltaRotation = FRotator::ZeroRotator;
 	DeltaRotation.Yaw = Direction * DeltaTime * TurnSpeed;
-	AddActorLocalRotation(DeltaRotation);
+	
+	AddActorLocalRotation(DeltaRotation, true);
 }
 
 void ATank::Fire(const FInputActionValue& Value)
@@ -60,7 +62,13 @@ void ATank::Fire(const FInputActionValue& Value)
 
 void ATank::RotateCamera(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Display, TEXT("Rotating"));
+	const float Direction = Value.Get<float>();
+	const float DeltaTime = UGameplayStatics::GetWorldDeltaSeconds(this);
+
+	FRotator DeltaRotation = FRotator::ZeroRotator;
+	DeltaRotation.Yaw = Direction * DeltaTime * TurnSpeed;
+	SpringArm->AddWorldRotation(DeltaRotation);
+	TurretMesh->AddWorldRotation(DeltaRotation);
 }
 
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -71,7 +79,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATank::Move);
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATank::Turn);
-		// EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &ATank::RotateCamera);
+		EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &ATank::RotateCamera);
 		// EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATank::Fire);
 	}
 }
