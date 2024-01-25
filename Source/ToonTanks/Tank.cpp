@@ -68,11 +68,6 @@ void ATank::Turn(const FInputActionValue& Value)
 	AddActorLocalRotation(DeltaRotation, true);
 }
 
-void ATank::Fire(const FInputActionValue& Value)
-{
-	UE_LOG(LogTemp, Display, TEXT("Firing"));
-}
-
 // Alternative implementation for rotating the turret (and the camera). Not reusable for non player turrets so not using it.
 // void ATank::RotateCamera(const FInputActionValue& Value)
 // {
@@ -96,6 +91,7 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	{
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATank::Move);
 		EnhancedInputComponent->BindAction(TurnAction, ETriggerEvent::Triggered, this, &ATank::Turn);
+		EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATank::Fire);
 		// EnhancedInputComponent->BindAction(RotateAction, ETriggerEvent::Triggered, this, &ATank::RotateCamera);
 		// EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &ATank::Fire);
 	}

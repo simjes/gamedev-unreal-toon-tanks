@@ -3,6 +3,7 @@
 
 #include "BasePawn.h"
 
+#include "Projectile.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -25,11 +26,6 @@ ABasePawn::ABasePawn()
 	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
 }
 
-// Called when the game starts or when spawned
-void ABasePawn::BeginPlay()
-{
-	Super::BeginPlay();
-}
 
 void ABasePawn::RotateTurret(const FVector& LookAtTarget)
 {
@@ -47,8 +43,12 @@ void ABasePawn::RotateTurret(const FVector& LookAtTarget)
 			10));
 }
 
-// Called every frame
-void ABasePawn::Tick(float DeltaTime)
+void ABasePawn::Fire()
 {
-	Super::Tick(DeltaTime);
+	const FVector SpawnLocation = ProjectileSpawnPoint->GetComponentLocation();
+	const FRotator SpawnRotation = ProjectileSpawnPoint->GetComponentRotation();
+
+	AProjectile* Projectile = GetWorld()
+		->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
+	
 }

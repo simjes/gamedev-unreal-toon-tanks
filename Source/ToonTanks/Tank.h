@@ -40,11 +40,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UInputAction* FireAction;
-	void Fire(const FInputActionValue& Value);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	UInputAction* RotateAction;
-	void RotateCamera(const FInputActionValue& Value);
+	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	// UInputAction* RotateAction;
+	// void RotateCamera(const FInputActionValue& Value);
 	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Pawn Components")
