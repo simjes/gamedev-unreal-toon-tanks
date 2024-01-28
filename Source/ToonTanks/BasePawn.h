@@ -20,6 +20,8 @@ public:
 	// Sets default values for this pawn's properties
 	ABasePawn();
 
+	virtual void HandleDestruction();
+
 protected:
 	void RotateTurret(const FVector& LookAtTarget);
 	void Fire();

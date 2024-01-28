@@ -25,6 +25,9 @@ public:
 	virtual void BeginPlay() override;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	virtual void HandleDestruction() override;
+
+	APlayerController* GetTankPlayerController() const { return TankPlayerController; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
@@ -44,7 +47,7 @@ protected:
 	// UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	// UInputAction* RotateAction;
 	// void RotateCamera(const FInputActionValue& Value);
-	
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Pawn Components")
 	USpringArmComponent* SpringArm;
@@ -58,8 +61,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Pawn Components")
 	float TurnSpeed = 100;
 
-	APlayerController* PlayerControllerRef;
-	
+	UPROPERTY()
+	APlayerController* TankPlayerController;
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 };

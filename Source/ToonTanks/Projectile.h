@@ -27,4 +27,11 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Combat")
 	UProjectileMovementComponent* ProjectileMovementComponent;
+
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherHit, FVector NormalImpulse,
+	           const FHitResult& Hit);
+
+	UPROPERTY(EditAnywhere)
+	float Damage = 50;
 };
