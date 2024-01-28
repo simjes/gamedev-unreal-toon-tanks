@@ -28,6 +28,8 @@ public:
 	virtual void HandleDestruction() override;
 
 	APlayerController* GetTankPlayerController() const { return TankPlayerController; }
+	
+	bool bAlive = true;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)

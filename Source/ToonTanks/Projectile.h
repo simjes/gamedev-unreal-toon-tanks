@@ -32,6 +32,21 @@ private:
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherHit, FVector NormalImpulse,
 	           const FHitResult& Hit);
 
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	UParticleSystem* HitParticles;
+
+	UPROPERTY(VisibleAnywhere, Category = "Combat")
+	UParticleSystemComponent* TrailParticles;
+
 	UPROPERTY(EditAnywhere)
 	float Damage = 50;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	USoundBase* LaunchSound;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	USoundBase* HitSound;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<UCameraShakeBase> HitCameraShakeClass;
 };
